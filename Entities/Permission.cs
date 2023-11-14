@@ -2,12 +2,16 @@
 {
     public class Permission
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public string PermissionName { get; set; } = string.Empty;
+        public string Name { get; set; }
 
-        public string Description { get; set; } = string.Empty;
+        public string Description { get; set; }
 
         public bool IsDeleted { get; set; } = false;
+
+        public virtual PermissionGroup Group { get; set; }
+
+        public virtual List<Position> Positions { get; set; }
     }
 }

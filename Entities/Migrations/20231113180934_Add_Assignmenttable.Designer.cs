@@ -4,6 +4,7 @@ using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Entities.Migrations
 {
     [DbContext(typeof(HRMSContext))]
-    partial class HRMSContextModelSnapshot : ModelSnapshot
+    [Migration("20231113180934_Add_Assignmenttable")]
+    partial class Add_Assignmenttable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -332,7 +335,7 @@ namespace Entities.Migrations
             modelBuilder.Entity("Entities.Assignment", b =>
                 {
                     b.HasOne("Entities.User", "Assignee")
-                        .WithMany("Assignments")
+                        .WithMany()
                         .HasForeignKey("AssigneeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -424,8 +427,6 @@ namespace Entities.Migrations
             modelBuilder.Entity("Entities.User", b =>
                 {
                     b.Navigation("AdditionalPermissions");
-
-                    b.Navigation("Assignments");
                 });
 #pragma warning restore 612, 618
         }

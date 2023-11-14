@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using Utils.Constants.Strings;
+using Utils.Converters;
 using Utils.HttpResponseModels;
 
 namespace HRMS.Middlewares
@@ -97,8 +98,10 @@ namespace HRMS.Middlewares
             var isDevEnv = _environment.EnvironmentName == "Development";
             var options = new JsonSerializerOptions
             {
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
             };
+
+            options.Converters.Add(new IgnoreEmptyStringConverter());
             var exceptionResult = JsonSerializer.Serialize(
                 new
                 {

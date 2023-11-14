@@ -8,6 +8,12 @@
 
         public const string CONFIRM_PASSWORD_NOT_MATCH = "Password confirm doesn't match";
 
+        public const string PAGE_NUMBER_ERROR = "Page must be greater than 0";
+
+        public const string PAGE_SIZE_ERROR = "Page's size must be greater than 0";
+
+        public const string EMPTY_ARRAY_ERROR = "This field must contain at least 1 value";
+
         public static string MAX_FILE_SIZE_ERROR { get; } = "File size must be less than {0} MB";
 
         public static string ALLOWED_FILE_EXTENSIONS_ERROR { get; } = "File extension must be in: {0}";

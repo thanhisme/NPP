@@ -10,14 +10,35 @@ namespace Entities
 
         public virtual DbSet<User> Users { get; set; }
 
-        public virtual DbSet<Permission> Permissions { get; set; }
-
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
 
         public virtual DbSet<BlackListToken> BlackListTokens { get; set; }
 
+        public virtual DbSet<Position> Positions { get; set; }
+
+        public virtual DbSet<PermissionGroup> PermissionGroups { get; set; }
+
+        public virtual DbSet<Permission> Permissions { get; set; }
+
+        public virtual DbSet<Department> Departments { get; set; }
+
+        public virtual DbSet<Project> Projects { get; set; }
+
+        public virtual DbSet<Assignment> Assignments { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Position>()
+                .HasMany(e => e.DefaultPermissions)
+                .WithMany(e => e.Positions);
+
+            modelBuilder.Entity<Project>()
+                .HasMany(e => e.Members)
+                .WithMany(e => e.Projects);
+
+            modelBuilder.Entity<User>()
+                .HasMany(e => e.Assignments)
+                .WithOne(e => e.Assignee);
         }
     }
 }

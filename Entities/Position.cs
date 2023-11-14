@@ -1,13 +1,16 @@
-﻿using Utils.Constants.Enums;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Entities
 {
+    [Index(nameof(Code), IsUnique = true, Name = "Position_Code")]
     public class Position
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public Positions Name { get; set; } = Positions.PERSONNEL;
+        public string Code { get; set; }
 
-        public virtual ICollection<Permission> DefaultPermissions { get; set; } = new List<Permission>();
+        public string Name { get; set; }
+
+        public virtual IList<Permission> DefaultPermissions { get; set; } = new List<Permission>();
     }
 }

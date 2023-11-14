@@ -44,6 +44,12 @@ namespace Infrastructure
         private static IServiceCollection RegisterAppServices(this IServiceCollection services)
         {
             services.AddTransient<IAuthService, AuthService>();
+            services.AddTransient<IPermissionGroupService, PermissionGroupService>();
+            services.AddTransient<IPermissionService, PermissionService>();
+            services.AddTransient<IPositionService, PositionService>();
+            services.AddTransient<IDepartmentService, DepartmentService>();
+            services.AddTransient<IProjectService, ProjectService>();
+            services.AddTransient<IAssignmentService, AssignmentService>();
             //services.AddTransient<IFileService, FileService>();
 
             return services;

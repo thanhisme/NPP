@@ -7,20 +7,28 @@ namespace Entities
     {
         public Guid Id { get; set; } = Guid.NewGuid();
 
-        public string FullName { get; set; } = string.Empty;
+        public string FullName { get; set; }
 
-        public string Email { get; set; } = string.Empty;
+        public string Email { get; set; }
 
-        public string Password { get; set; } = string.Empty;
+        public string Password { get; set; }
 
-        public string Address { get; set; } = string.Empty;
+        public string Address { get; set; }
 
-        public string Tel { get; set; } = string.Empty;
+        public string Tel { get; set; }
 
-        public bool IsDeleted { get; set; } = false;
+        public bool IsDeleted { get; set; }
 
-        public DateTime WorkStartDate { get; set; } = DateTime.Now;
+        public Position Position { get; set; }
 
-        public virtual ICollection<Permission> AdditionalPermissions { get; set; } = new List<Permission>();
+        public Department Department { get; set; }
+
+        public DateTime WorkStartDate { get; set; }
+
+        public virtual IList<Permission> AdditionalPermissions { get; set; }
+
+        public virtual IList<Project> Projects { get; set; }
+
+        public virtual IList<Assignment> Assignments { get; set; }
     }
 }

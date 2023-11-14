@@ -4,6 +4,7 @@ using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Entities.Migrations
 {
     [DbContext(typeof(HRMSContext))]
-    partial class HRMSContextModelSnapshot : ModelSnapshot
+    [Migration("20231113170213_InitDB")]
+    partial class InitDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,45 +24,6 @@ namespace Entities.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Entities.Assignment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AssigneeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DueDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Note")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("ProjectId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("State")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AssigneeId");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("Assignments");
-                });
 
             modelBuilder.Entity("Entities.BlackListToken", b =>
                 {
@@ -274,9 +238,6 @@ namespace Entities.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("PositionId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Tel")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -287,11 +248,14 @@ namespace Entities.Migrations
                     b.Property<DateTime>("WorkStartDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("positionId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");
 
-                    b.HasIndex("PositionId");
+                    b.HasIndex("positionId");
 
                     b.HasIndex(new[] { "Email" }, "Username")
                         .IsUnique();
@@ -329,25 +293,6 @@ namespace Entities.Migrations
                     b.ToTable("ProjectUser");
                 });
 
-            modelBuilder.Entity("Entities.Assignment", b =>
-                {
-                    b.HasOne("Entities.User", "Assignee")
-                        .WithMany("Assignments")
-                        .HasForeignKey("AssigneeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Entities.Project", "Project")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Assignee");
-
-                    b.Navigation("Project");
-                });
-
             modelBuilder.Entity("Entities.Permission", b =>
                 {
                     b.HasOne("Entities.PermissionGroup", "Group")
@@ -380,15 +325,15 @@ namespace Entities.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Entities.Position", "Position")
+                    b.HasOne("Entities.Position", "position")
                         .WithMany()
-                        .HasForeignKey("PositionId")
+                        .HasForeignKey("positionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Department");
 
-                    b.Navigation("Position");
+                    b.Navigation("position");
                 });
 
             modelBuilder.Entity("PermissionPosition", b =>
@@ -424,8 +369,6 @@ namespace Entities.Migrations
             modelBuilder.Entity("Entities.User", b =>
                 {
                     b.Navigation("AdditionalPermissions");
-
-                    b.Navigation("Assignments");
                 });
 #pragma warning restore 612, 618
         }

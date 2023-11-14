@@ -8,11 +8,11 @@ namespace HRMS.Controllers
     public class BaseController : ControllerBase
     {
         public ActionResult<HttpResponse<T>> BaseResponse<T>(
-        HttpStatusCode statusCode,
-        string message,
-        int? totalRecords = null,
-        T? data = default
-    )
+            HttpStatusCode statusCode,
+            string message,
+            int? totalRecords = null,
+            T? data = default
+        )
         {
             return StatusCode(
                 (int)statusCode,

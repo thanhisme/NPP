@@ -7,9 +7,9 @@ namespace Entities
     {
         public Guid Id { get; set; }
 
-        public string Code { get; set; }
+        public string? Code { get; set; }
 
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         public virtual IList<Permission> DefaultPermissions { get; set; } = new List<Permission>();
     }

@@ -7,23 +7,23 @@ namespace Entities
     {
         public Guid Id { get; set; } = Guid.NewGuid();
 
-        public string FullName { get; set; }
+        public string? FullName { get; set; }
 
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
-        public string Password { get; set; }
+        public string? Password { get; set; }
 
-        public string Address { get; set; }
+        public string? Address { get; set; }
 
-        public string Tel { get; set; }
+        public string? Tel { get; set; }
 
-        public bool IsDeleted { get; set; }
+        public bool? IsDeleted { get; set; }
 
-        public Position Position { get; set; }
+        public Position? Position { get; set; }
 
-        public Department Department { get; set; }
+        public Department? Department { get; set; }
 
-        public DateTime WorkStartDate { get; set; }
+        public DateTime? WorkStartDate { get; set; }
 
         public virtual IList<Permission> AdditionalPermissions { get; set; }
 

@@ -21,7 +21,7 @@ namespace Entities
 
         public Position? Position { get; set; }
 
-        public Department? Department { get; set; }
+        public Department Department { get; set; }
 
         public DateTime? WorkStartDate { get; set; }
 

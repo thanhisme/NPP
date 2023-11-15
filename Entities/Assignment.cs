@@ -13,7 +13,7 @@ namespace Entities
 
         public User? Assignee { get; set; }
 
-        public Project? Project { get; set; }
+        public Project Project { get; set; }
 
         public DateTime? StartDate { get; set; }
 

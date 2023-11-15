@@ -1,5 +1,5 @@
 ﻿using Entities;
-using Infrastructure.Models.CommonModels;
+using Infrastructure.Models.RequestModels.Assignment;
 using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,9 +22,9 @@ namespace HRMS.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult<HttpResponse<List<User>>> GetMany([FromQuery] PaginationRequest req)
+        public ActionResult<HttpResponse<List<User>>> GetMany([FromQuery] AssignmentFilterRequest req)
         {
-            var assignments = _assignmentService.GetMany(req.Page, req.PageSize);
+            var assignments = _assignmentService.GetMany(req);
 
             return SuccessResponse(assignments.Count, assignments);
         }

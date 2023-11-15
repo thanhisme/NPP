@@ -31,7 +31,7 @@ namespace Infrastructure.Services.Implementations
         public Assignment? GetById(Guid id)
         {
             return _assignmentRepository.GetOne(
-                (permission) => permission.Id == id
+                (assignment) => assignment.Id == id && !assignment.IsDeleted
             );
         }
 
@@ -72,57 +72,80 @@ namespace Infrastructure.Services.Implementations
             return id;
         }
 
-        public List<AssignmentResponse> GetMany(int page, int pageSize)
+        public async Task<Guid?> Update(Guid id, UpdateAssignmentRequest req)
         {
-            var assignments = _assignmentRepository
-                .GetMany(
-                    page,
-                    pageSize,
-                    predicate: assignment => !assignment.IsDeleted,
-                    projection: assignment => new Assignment
-                    {
-                        Id = assignment.Id,
-                        Description = assignment.Description,
-                        Project = assignment.Project,
-                        ProjectId = assignment.ProjectId,
-                        State = assignment.State,
-                        StartDate = assignment.StartDate,
-                        DueDate = assignment.DueDate,
-                        FinishDate = assignment.FinishDate,
-                        Creator = assignment.Creator,
-                        Assignee = assignment.Assignee,
-                        AssigneeId = assignment.AssigneeId,
-                        CreatorId = assignment.CreatorId,
-                        CreatedDate = assignment.CreatedDate
-                    }
-                )
-                .GroupBy(
-                    assignment => new { assignment.Assignee, assignment.AssigneeId }
-                )
-                .Select(group => new AssignmentResponse
-                {
-                    Assignee = group.Key.Assignee,
-                    AssigneeId = group.Key.AssigneeId,
-                    assignments = group.Select(assignment => new AssignmentItem
-                    {
-                        Id = assignment.Id,
-                        Description = assignment.Description,
-                        Project = assignment.Project,
-                        ProjectId = assignment.ProjectId,
-                        State = assignment.State,
-                        StartDate = assignment.StartDate,
-                        DueDate = assignment.DueDate,
-                        FinishDate = assignment.FinishDate,
-                        Creator = assignment.Creator,
-                        CreatorId = assignment.CreatorId,
-                        CreatedDate = assignment.CreatedDate
-                    }
-                    ).ToList(),
-                }
-                )
-                .ToList();
+            var assignment = GetById(id);
 
-            return assignments;
+            if (assignment == null)
+            {
+                return null;
+            }
+
+            _mapper.Map(req, assignment);
+
+            if (req.AssigneeId != null)
+            {
+                var assignee = _userRepository.GetOne(user => user.Id == req.AssigneeId);
+                assignment.Assignee = assignee!.FullName;
+            }
+
+            if (req.ProjectId != null)
+            {
+                var project = _projectRepository.GetOne(project => project.Id == req.ProjectId);
+                assignment.Project = project!.Name;
+            }
+
+            assignment.Modifier = "Quản lí 1";
+            assignment.ModifierId = Guid.Parse("CE79DE25-01D4-42E7-969E-38B8E3A11FA9");
+            assignment.UpdatedDate = DateTime.Now;
+            await _unitOfWork.SaveChangesAsync();
+
+            return id;
+
+        }
+
+        public (int, List<AssignmentResponse>) GetMany(AssignmentFilterRequest req)
+        {
+            var assignmentDbSet = _assignmentRepository.GetQueryableObject();
+            var userDbSet = _userRepository.GetQueryableObject();
+
+            var assignments = (from assignment
+                               in assignmentDbSet
+                               join user in userDbSet on assignment.AssigneeId equals user.Id
+                               where !assignment.IsDeleted &&
+                                    (req.Project == null || assignment.ProjectId == req.Project) &&
+                                    (req.Department == null || user.DepartmentId == req.Department)
+                               group assignment
+                               by new { assignment.Assignee, assignment.AssigneeId }
+                               into userAssignments
+                               select new AssignmentResponse
+                               {
+                                   Assignee = userAssignments.Key.Assignee,
+                                   AssigneeId = userAssignments.Key.AssigneeId,
+                                   assignments = userAssignments.Select(assignment => new AssignmentItem
+                                   {
+                                       Id = assignment.Id,
+                                       Description = assignment.Description,
+                                       Project = assignment.Project,
+                                       ProjectId = assignment.ProjectId,
+                                       State = assignment.State,
+                                       StartDate = assignment.StartDate,
+                                       DueDate = assignment.DueDate,
+                                       FinishDate = assignment.FinishDate,
+                                       Creator = assignment.Creator,
+                                       CreatorId = assignment.CreatorId,
+                                       CreatedDate = assignment.CreatedDate
+                                   }
+                                   ).ToList()
+                               }).ToList();
+
+            return (
+                assignments.Count,
+                assignments
+                    .Skip((req.Page - 1) * req.PageSize)
+                    .Take(req.PageSize)
+                    .ToList()
+            );
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Entities;
-using Infrastructure.Models.CommonModels;
 using Infrastructure.Models.RequestModels.Assignment;
 using Infrastructure.Models.ResponseModels.Assignment;
 using Infrastructure.Services.Interfaces;
@@ -30,16 +29,16 @@ namespace HRMS.Controllers
 
             return id == null
                 ? throw new HttpExceptionResponse(HttpStatusCode.BadRequest, "Invalid assignee id or project id")
-                : SuccessResponse(id);
+                : CreatedResponse(id);
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult<HttpResponse<List<AssignmentResponse>>> GetMany([FromQuery] PaginationRequest req)
+        public ActionResult<HttpResponse<List<AssignmentResponse>>> GetMany([FromQuery] AssignmentFilterRequest req)
         {
-            var assignments = _assignmentService.GetMany(req.Page, req.PageSize);
+            var (totalRecord, assignments) = _assignmentService.GetMany(req);
 
-            return SuccessResponse(assignments.Count, assignments);
+            return SuccessResponse(totalRecord, assignments);
         }
 
         [HttpGet("{id}")]
@@ -51,6 +50,17 @@ namespace HRMS.Controllers
             return assignment == null
                 ? throw new HttpExceptionResponse(HttpStatusCode.NotFound, HttpExceptionMessages.NOT_FOUND)
                 : SuccessResponse(assignment);
+        }
+
+        [HttpPut("{id}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<HttpResponse<Guid?>>> Update(Guid id, [FromBody] UpdateAssignmentRequest req)
+        {
+            var updatedId = await _assignmentService.Update(id, req);
+
+            return updatedId == null
+                ? throw new HttpExceptionResponse(HttpStatusCode.NotFound, HttpExceptionMessages.NOT_FOUND)
+                : SuccessResponse(updatedId);
         }
 
         [HttpDelete("{id}")]

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Entities;
+using Infrastructure.Models.RequestModels.Assignment;
 using Infrastructure.Models.RequestModels.Auth;
 using Infrastructure.Models.RequestModels.Permission;
 using Infrastructure.Models.RequestModels.PermissionGroup;
@@ -43,6 +44,7 @@ namespace Infrastructure.AutoMapper
             //CreateMap<CreateProjectRequest, Project>()
             //    .ForMember((dest) => dest.Members, opt => opt.MapFrom<MemberResolver>())
             //    .ForAllMembers(opts => opts.Condition(_skipNullProps));
+            CreateMap<CreateAssignmentRequest, Assignment>().ForAllMembers(opts => opts.Condition(_skipNullProps));
         }
     }
 }

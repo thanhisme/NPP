@@ -53,13 +53,13 @@ namespace Infrastructure.Services.Implementations
         {
             var hashedPassword = MD5Algorithm.HashMd5(req.Password);
             var user = _userRepository.GetOne(
-                (user) => user.Email == req.Username + "@namphuongtech.com" && user.IsDeleted != true,
-                (user) => new User
-                {
-                    Id = user.Id,
-                    Password = user.Password,
-                    AdditionalPermissions = user.AdditionalPermissions
-                }
+                (user) => user.Email == req.Username + "@namphuongtech.com" && user.IsDeleted != true
+                //(user) => new User
+                //{
+                //    Id = user.Id,
+                //    Password = user.Password,
+                //    AdditionalPermissions = user.AdditionalPermissions
+                //}
             );
 
             if (user == null)

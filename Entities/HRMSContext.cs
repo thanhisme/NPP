@@ -31,14 +31,6 @@ namespace Entities
             modelBuilder.Entity<Position>()
                 .HasMany(e => e.DefaultPermissions)
                 .WithMany(e => e.Positions);
-
-            modelBuilder.Entity<Project>()
-                .HasMany(e => e.Members)
-                .WithMany(e => e.Projects);
-
-            modelBuilder.Entity<User>()
-                .HasMany(e => e.Assignments)
-                .WithOne(e => e.Assignee);
         }
     }
 }

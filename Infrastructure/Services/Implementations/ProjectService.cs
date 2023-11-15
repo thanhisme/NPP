@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Entities;
+using Infrastructure.Models.ResponseModels.Project;
 using Infrastructure.Repositories.Interfaces;
 using Infrastructure.Services.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
@@ -27,26 +28,19 @@ namespace Infrastructure.Services.Implementations
             );
         }
 
-        public List<Project> GetMany(int page, int pageSize)
+        public List<ProjectResponse> GetMany(int page, int pageSize)
         {
-            return _projectRepository.GetMany(
-                page,
-                pageSize
-            //projection: project => new Project()
-            //{
-            //    Id = project.Id,
-            //    Code = project.Code,
-            //    Name = project.Name,
-            //    Members = project.Members
-            //        .Select(member => new User
-            //        {
-            //            Id = member.Id,
-            //            FullName = member.FullName,
-            //        }
-            //        )
-            //        .ToList()
-            //}
-            );
+            var projects = _projectRepository.GetMany(page, pageSize);
+
+            return projects
+                .Select(project => new ProjectResponse
+                {
+                    Id = project.Id,
+                    Name = project.Name,
+                    Code = project.Code,
+                }
+                )
+                .ToList();
         }
     }
 }

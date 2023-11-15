@@ -44,6 +44,8 @@ namespace Infrastructure.AutoMapper
             //CreateMap<CreateProjectRequest, Project>()
             //    .ForMember((dest) => dest.Members, opt => opt.MapFrom<MemberResolver>())
             //    .ForAllMembers(opts => opts.Condition(_skipNullProps));
+            CreateMap<UpdateAssignmentRequest, Assignment>().ForAllMembers(opts => opts.Condition(_skipNullProps));
+
             CreateMap<CreateAssignmentRequest, Assignment>().ForAllMembers(opts => opts.Condition(_skipNullProps));
         }
     }

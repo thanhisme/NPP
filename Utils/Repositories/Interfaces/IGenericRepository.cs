@@ -5,6 +5,8 @@ namespace Infrastructure.Repositories.Interfaces
 {
     public interface IGenericRepository<TEntity> where TEntity : class
     {
+        public IQueryable<TEntity> GetQueryableObject();
+
         public List<TEntity> GetMany(
             int page,
             int pageSize,

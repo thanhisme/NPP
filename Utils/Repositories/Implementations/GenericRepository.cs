@@ -16,6 +16,11 @@ namespace Infrastructure.Repositories.Implementations
             DbSet = context.Set<TEntity>();
         }
 
+        public IQueryable<TEntity> GetQueryableObject()
+        {
+            return DbSet;
+        }
+
         public virtual List<TEntity> GetMany(
             int page,
             int pageSize,
@@ -34,7 +39,7 @@ namespace Infrastructure.Repositories.Implementations
 
             if (projection != null)
             {
-                query = query.Select(projection);
+                query = query.Select(item => projection != null ? projection.Compile()(item) : item);
             }
 
             foreach (var includeProperty in includeProperties.Split
@@ -69,7 +74,7 @@ namespace Infrastructure.Repositories.Implementations
 
             if (projection != null)
             {
-                query = query.Select(projection);
+                query = query.Select(item => projection != null ? projection.Compile()(item) : item);
             }
 
             foreach (var includeProperty in includeProperties.Split

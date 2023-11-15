@@ -19,7 +19,7 @@ namespace Entities
 
         public string Department { get; set; }
 
-        public string DepartmentId { get; set; }
+        public Guid DepartmentId { get; set; }
 
         public DateTime WorkStartDate { get; set; }
     }

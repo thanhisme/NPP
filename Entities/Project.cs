@@ -1,23 +1,26 @@
-﻿namespace Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Entities
 {
-    public class Project
+    [Table("NPP_Projects")]
+    public class Project : BaseEntity
     {
-        public Guid Id { get; set; }
+        public string Code { get; set; }
 
-        public string? Code { get; set; }
+        public string Name { get; set; }
 
-        public string? Name { get; set; }
+        public string Description { get; set; }
 
-        public string? Description { get; set; }
+        public string ProjectManager { get; set; }
 
-        public DateTime? StartDate { get; set; }
+        public Guid ProjectManagerId { get; set; }
 
-        public DateTime? DueDate { get; set; }
+        public DateTime StartDate { get; set; }
 
-        public DateTime? FinishDay { get; set; }
+        public DateTime DueDate { get; set; }
 
-        public List<User>? Members { get; set; }
+        public DateTime? FinishDate { get; set; }
 
-        public string? Status { get; set; }
+        public string State { get; set; } = "in-progress";
     }
 }

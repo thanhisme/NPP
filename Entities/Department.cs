@@ -1,5 +1,8 @@
-﻿namespace Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Entities
 {
+    [Table("NPP_Departments")]
     public class Department
     {
         public Guid Id { get; set; }

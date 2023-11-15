@@ -31,21 +31,21 @@ namespace Infrastructure.Services.Implementations
         {
             return _projectRepository.GetMany(
                 page,
-                pageSize,
-                projection: project => new Project()
-                {
-                    Id = project.Id,
-                    Code = project.Code,
-                    Name = project.Name,
-                    Members = project.Members
-                        .Select(member => new User
-                        {
-                            Id = member.Id,
-                            FullName = member.FullName,
-                        }
-                        )
-                        .ToList()
-                }
+                pageSize
+            //projection: project => new Project()
+            //{
+            //    Id = project.Id,
+            //    Code = project.Code,
+            //    Name = project.Name,
+            //    Members = project.Members
+            //        .Select(member => new User
+            //        {
+            //            Id = member.Id,
+            //            FullName = member.FullName,
+            //        }
+            //        )
+            //        .ToList()
+            //}
             );
         }
     }

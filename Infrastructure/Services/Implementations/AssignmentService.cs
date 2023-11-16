@@ -35,7 +35,7 @@ namespace Infrastructure.Services.Implementations
             );
         }
 
-        public async Task<Guid?> Create(CreateAssignmentRequest req)
+        public async Task<Guid?> Create(CreateAssignmentRequest req, Guid userId, string username)
         {
             var assignment = _mapper.Map<Assignment>(req);
 
@@ -44,11 +44,10 @@ namespace Infrastructure.Services.Implementations
 
             assignment.Assignee = assignee!.FullName;
             assignment.Project = project!.Name;
-            assignment.Creator = "Quản lí 1";
-            assignment.CreatorId = Guid.Parse("CE79DE25-01D4-42E7-969E-38B8E3A11FA9");
-            assignment.Modifier = "Quản lí 1";
-            assignment.ModifierId = Guid.Parse("CE79DE25-01D4-42E7-969E-38B8E3A11FA9");
-            // add createdBy
+            assignment.Creator = username;
+            assignment.CreatorId = userId;
+            assignment.Modifier = username;
+            assignment.ModifierId = userId;
 
 
             _assignmentRepository.Create(assignment);
@@ -72,7 +71,7 @@ namespace Infrastructure.Services.Implementations
             return id;
         }
 
-        public async Task<Guid?> Update(Guid id, UpdateAssignmentRequest req)
+        public async Task<Guid?> Update(Guid id, UpdateAssignmentRequest req, Guid userId, string username)
         {
             var assignment = GetById(id);
 
@@ -95,8 +94,8 @@ namespace Infrastructure.Services.Implementations
                 assignment.Project = project!.Name;
             }
 
-            assignment.Modifier = "Quản lí 1";
-            assignment.ModifierId = Guid.Parse("CE79DE25-01D4-42E7-969E-38B8E3A11FA9");
+            assignment.Modifier = username;
+            assignment.ModifierId = userId;
             assignment.UpdatedDate = DateTime.Now;
             await _unitOfWork.SaveChangesAsync();
 

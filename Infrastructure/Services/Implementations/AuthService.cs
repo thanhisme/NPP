@@ -53,7 +53,7 @@ namespace Infrastructure.Services.Implementations
         {
             var hashedPassword = MD5Algorithm.HashMd5(req.Password);
             var user = _userRepository.GetOne(
-                (user) => user.Email == req.Username + "@namphuongtech.com" && user.IsDeleted != true
+                (user) => user.Email == req.Username + "@namphuong.com" && user.IsDeleted != true
                 //(user) => new User
                 //{
                 //    Id = user.Id,
@@ -82,15 +82,16 @@ namespace Infrastructure.Services.Implementations
                     JwtRegisteredClaimNames.Iat,
                     DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),
                     ClaimValueTypes.Integer64
-                )
+                ),
+                new Claim(ClaimTypes.Name, user.FullName)
             };
 
             var accessToken = Jwt.GenerateToken(claims, _secretKey);
-            var refreshToken = GenerateRefreshToken(user, ipAddress);
+            //var refreshToken = GenerateRefreshToken(user, ipAddress);
 
             await _unitOfWork.SaveChangesAsync();
 
-            return (accessToken, refreshToken);
+            return (accessToken, new RefreshToken());
         }
 
         public async Task<(string, RefreshToken)?> Refresh2TokenTypes(

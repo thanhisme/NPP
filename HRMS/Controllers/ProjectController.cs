@@ -2,7 +2,6 @@
 using Infrastructure.Models.CommonModels;
 using Infrastructure.Models.ResponseModels.Project;
 using Infrastructure.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using Utils.Constants.Strings;
@@ -22,7 +21,6 @@ namespace HRMS.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public ActionResult<HttpResponse<List<ProjectResponse>>> GetMany([FromQuery] PaginationRequest req)
         {
             var permissionGroups = _projectService.GetMany(req.Page, req.PageSize);
@@ -31,7 +29,6 @@ namespace HRMS.Controllers
         }
 
         [HttpGet("{id}")]
-        [AllowAnonymous]
         public ActionResult<HttpResponse<Project>> GetById(Guid id)
         {
             var permissionGroup = _projectService.GetById(id);

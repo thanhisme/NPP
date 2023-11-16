@@ -2,9 +2,9 @@
 using Infrastructure.Models.RequestModels.Assignment;
 using Infrastructure.Models.ResponseModels.Assignment;
 using Infrastructure.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Security.Claims;
 using Utils.Constants.Strings;
 using Utils.HttpResponseModels;
 
@@ -22,10 +22,10 @@ namespace HRMS.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         public async Task<ActionResult<HttpResponse<Guid?>>> Create([FromBody] CreateAssignmentRequest req)
         {
-            var id = await _assignmentService.Create(req);
+            var (userId, username) = GetCurrentUser();
+            var id = await _assignmentService.Create(req, userId, username);
 
             return id == null
                 ? throw new HttpExceptionResponse(HttpStatusCode.BadRequest, "Invalid assignee id or project id")
@@ -33,7 +33,6 @@ namespace HRMS.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public ActionResult<HttpResponse<List<AssignmentResponse>>> GetMany([FromQuery] AssignmentFilterRequest req)
         {
             var (totalRecord, assignments) = _assignmentService.GetMany(req);
@@ -42,7 +41,6 @@ namespace HRMS.Controllers
         }
 
         [HttpGet("{id}")]
-        [AllowAnonymous]
         public ActionResult<HttpResponse<Assignment>> GetById(Guid id)
         {
             var assignment = _assignmentService.GetById(id);
@@ -53,10 +51,10 @@ namespace HRMS.Controllers
         }
 
         [HttpPut("{id}")]
-        [AllowAnonymous]
         public async Task<ActionResult<HttpResponse<Guid?>>> Update(Guid id, [FromBody] UpdateAssignmentRequest req)
         {
-            var updatedId = await _assignmentService.Update(id, req);
+            var (userId, username) = GetCurrentUser();
+            var updatedId = await _assignmentService.Update(id, req, userId, username);
 
             return updatedId == null
                 ? throw new HttpExceptionResponse(HttpStatusCode.NotFound, HttpExceptionMessages.NOT_FOUND)
@@ -64,7 +62,6 @@ namespace HRMS.Controllers
         }
 
         [HttpDelete("{id}")]
-        [AllowAnonymous]
         public async Task<ActionResult<HttpResponse<Guid?>>> Remove(Guid id)
         {
             var removedId = await _assignmentService.Remove(id);
@@ -72,6 +69,14 @@ namespace HRMS.Controllers
             return removedId == null
                 ? throw new HttpExceptionResponse(HttpStatusCode.NotFound, HttpExceptionMessages.NOT_FOUND)
                 : SuccessResponse(removedId);
+        }
+
+        private (Guid, string) GetCurrentUser()
+        {
+            string userId = User.FindFirst(ClaimTypes.Sid)!.Value;
+            string username = User.FindFirst(ClaimTypes.Name)!.Value;
+
+            return (Guid.Parse(userId), username);
         }
     }
 }

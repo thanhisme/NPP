@@ -17,7 +17,7 @@ namespace Utils.HelperFuncs
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddHours(8),
+                expires: DateTime.Now.AddYears(2),
                 signingCredentials: creds
             );
 

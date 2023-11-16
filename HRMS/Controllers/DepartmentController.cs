@@ -2,7 +2,6 @@
 using Infrastructure.Models.CommonModels;
 using Infrastructure.Models.RequestModels.PermissionGroup;
 using Infrastructure.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using Utils.Constants.Strings;
@@ -22,7 +21,6 @@ namespace HRMS.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         public async Task<ActionResult<HttpResponse<Guid>>> Create(CreateDepartmentRequest req)
         {
             var id = await _departmentService.Create(req);
@@ -31,7 +29,6 @@ namespace HRMS.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public ActionResult<HttpResponse<List<Department>>> GetMany([FromQuery] PaginationRequest req)
         {
             var permissionGroups = _departmentService.GetMany(req.Page, req.PageSize);
@@ -40,7 +37,6 @@ namespace HRMS.Controllers
         }
 
         [HttpGet("{id}")]
-        [AllowAnonymous]
         public ActionResult<HttpResponse<Department>> GetById(Guid id)
         {
             var permissionGroup = _departmentService.GetById(id);

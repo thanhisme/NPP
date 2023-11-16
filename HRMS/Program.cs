@@ -26,7 +26,7 @@ app.UseCors(x => x
 
 app.UseMiddleware<GlobalExceptionHandler>();
 
-app.UseMiddleware<CheckTokenInBlackList>();
+//app.UseMiddleware<CheckTokenInBlackList>();
 
 app.UseAuthentication();
 

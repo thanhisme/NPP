@@ -1,7 +1,13 @@
-﻿using Infrastructure.Models.RequestModels.Auth;
+﻿using Entities;
+using Infrastructure.Models.RequestModels.Auth;
+using Infrastructure.Models.ResponseModels.Auth;
 using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using Utils.Annotations.Authorization;
+using Utils.Constants.Strings;
+using Utils.HelperFuncs;
 using Utils.HttpResponseModels;
 
 namespace HRMS.Controllers
@@ -26,27 +32,27 @@ namespace HRMS.Controllers
             return CreatedResponse(id);
         }
 
-        //    [HttpPost]
-        //    [AllowAnonymous]
-        //    [AnonymousOnly]
-        //    public async Task<ActionResult<HttpResponse<TokensResponse>>> SignIn(SignInRequest req)
-        //    {
-        //        var signInResult = await _authService.SignIn(req, GetIpAddress());
+        [HttpPost]
+        [AllowAnonymous]
+        [AnonymousOnly]
+        public async Task<ActionResult<HttpResponse<TokensResponse>>> SignIn(SignInRequest req)
+        {
+            var signInResult = await _authService.SignIn(req, GetIpAddress());
 
-        //        if (signInResult == null)
-        //        {
-        //            throw new HttpExceptionResponse(
-        //                HttpStatusCode.BadRequest,
-        //                HttpExceptionMessages.INVALID_USERNAME_OR_PASSWORD
-        //            );
-        //        }
+            if (signInResult == null)
+            {
+                throw new HttpExceptionResponse(
+                    HttpStatusCode.BadRequest,
+                    HttpExceptionMessages.INVALID_USERNAME_OR_PASSWORD
+                );
+            }
 
-        //        var (accessToken, refreshToken) = signInResult.Value;
-        //        var userAgent = GetUserAgent();
-        //        var response = HandleResponseBasedOnDevice(userAgent, accessToken, refreshToken);
+            var (accessToken, refreshToken) = signInResult.Value;
+            var userAgent = GetUserAgent();
+            var response = HandleResponseBasedOnDevice(userAgent, accessToken, refreshToken);
 
-        //        return SuccessResponse(response);
-        //    }
+            return SuccessResponse(response);
+        }
 
         //    [HttpGet]
         //    [AllowAnonymous]
@@ -85,54 +91,54 @@ namespace HRMS.Controllers
         //        return SuccessResponse(true);
         //    }
 
-        //    private string GetIpAddress()
-        //    {
-        //        return HttpContext.Connection.RemoteIpAddress!.ToString();
-        //    }
+        private string GetIpAddress()
+        {
+            return HttpContext.Connection.RemoteIpAddress!.ToString();
+        }
 
-        //    private string GetUserAgent()
-        //    {
-        //        return Request.Headers["User-Agent"].ToString();
-        //    }
+        private string GetUserAgent()
+        {
+            return Request.Headers["User-Agent"].ToString();
+        }
 
-        //    private static void SetRefreshToken2Cookie(
-        //        IResponseCookies cookies,
-        //        RefreshToken refreshToken
-        //    )
-        //    {
-        //        var cookieOptions = new CookieOptions
-        //        {
-        //            HttpOnly = true,
-        //            Expires = refreshToken.Expiry,
-        //            Secure = true
-        //        };
+        private static void SetRefreshToken2Cookie(
+                IResponseCookies cookies,
+                RefreshToken refreshToken
+            )
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = refreshToken.Expiry,
+                Secure = true
+            };
 
-        //        cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
-        //    }
+            cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
+        }
 
-        //    private TokensResponse HandleResponseBasedOnDevice(
-        //        string agent,
-        //        string accessToken,
-        //        RefreshToken refreshToken
-        //    )
-        //    {
-        //        var response = new TokensResponse()
-        //        {
-        //            AccessToken = accessToken
-        //        };
+        private TokensResponse HandleResponseBasedOnDevice(
+                string agent,
+                string accessToken,
+                RefreshToken refreshToken
+        )
+        {
+            var response = new TokensResponse()
+            {
+                AccessToken = accessToken
+            };
 
-        //        if (DeviceDetection.IsFromMobileDevice(agent) ||
-        //            DeviceDetection.IsFromTabletDevice(agent)
-        //        )
-        //        {
-        //            response.RefreshToken = refreshToken.Token;
-        //        }
-        //        else
-        //        {
-        //            SetRefreshToken2Cookie(Response.Cookies, refreshToken);
-        //        }
+            if (DeviceDetection.IsFromMobileDevice(agent) ||
+                DeviceDetection.IsFromTabletDevice(agent)
+            )
+            {
+                response.RefreshToken = refreshToken.Token;
+            }
+            else
+            {
+                //SetRefreshToken2Cookie(Response.Cookies, refreshToken);
+            }
 
-        //        return response;
-        //    }
+            return response;
+        }
     }
 }

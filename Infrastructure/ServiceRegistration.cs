@@ -50,6 +50,7 @@ namespace Infrastructure
             services.AddTransient<IDepartmentService, DepartmentService>();
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IAssignmentService, AssignmentService>();
+            services.AddTransient<IUserService, UserService>();
             //services.AddTransient<IFileService, FileService>();
 
             return services;

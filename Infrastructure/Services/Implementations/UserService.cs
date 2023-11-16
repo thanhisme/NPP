@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Entities;
+using Infrastructure.Models.ResponseModels.User;
 using Infrastructure.Repositories.Interfaces;
 using Infrastructure.Services.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
@@ -25,6 +26,23 @@ namespace Infrastructure.Services.Implementations
             return _userRepository.GetOne(
                 (user) => user.Id == id
             );
+        }
+
+        public List<UserResponse> GetMany()
+        {
+            var users = _userRepository.GetMany(
+                1,
+                int.MaxValue,
+                predicate: (user) => !user.IsDeleted
+            );
+
+            return users.Select(user => new UserResponse
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                Department = user.Department,
+                DepartmentId = user.DepartmentId,
+            }).ToList();
         }
     }
 }

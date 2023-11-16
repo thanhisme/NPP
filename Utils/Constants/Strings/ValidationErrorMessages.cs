@@ -18,6 +18,8 @@
 
         public static string ALLOWED_FILE_EXTENSIONS_ERROR { get; } = "File extension must be in: {0}";
 
+        public static string INVALID_STATE_ERROR { get; } = "State value must be in: {0}";
+
         public static string UNIQUE_CONTRAINT_ERROR { get; } = "Value {0} already exists!";
 
         public static string NOT_ALLOWED_EMAIL { get; } = "This email is not allowed!";

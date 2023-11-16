@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Utils.Annotations.Validation;
 using Utils.Constants.Strings;
 
 namespace Infrastructure.Models.RequestModels.Assignment
@@ -24,5 +25,10 @@ namespace Infrastructure.Models.RequestModels.Assignment
         public DateTime? StartDate { get; set; } = DateTime.Now;
 
         public DateTime? DueDate { get; set; }
+
+        public DateTime? FinishDate { get; set; }
+
+        [ValidState]
+        public string? State { get; set; }
     }
 }
